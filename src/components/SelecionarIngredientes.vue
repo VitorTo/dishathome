@@ -12,19 +12,19 @@ export default {
   data() {
     return {
       categorias: [] as ICategoria[],
-      searchTerm: '',
+      searchInput: '',
       selectedIngredientes: [] as string[]
     }
   },
   computed: {
     filteredCategorias() {
-      if (!this.searchTerm) {
+      if (!this.searchInput) {
         return this.categorias;
       }
       return this.categorias
         .map(categoria => {
           const ingredientesFiltrados = categoria.ingredientes.filter(ingrediente =>
-            ingrediente.toLowerCase().includes(this.searchTerm.toLowerCase())
+            ingrediente.toLowerCase().includes(this.searchInput.toLowerCase())
           );
           if (ingredientesFiltrados.length > 0) {
             return {
@@ -53,6 +53,9 @@ export default {
         this.selectedIngredientes.splice(index, 1);
       }
       this.$emit('remover-ingrediente', ingrediente);
+    },
+    clearInputSearch() {
+      this.searchInput = '';
     }
   }
 }
@@ -62,7 +65,25 @@ export default {
   <section class="selecionar-ingredientes">
     <h1 class="cabecalho titulo-ingredientes">Ingredientes</h1>
 
-    <input class="search-input" type="text" v-model="searchTerm" placeholder="Pesquisar ingrediente..." />
+    <div class="search-container">
+      <input
+        class="search-input"
+        type="text"
+        v-model="searchInput"
+        placeholder="Pesquisar ingrediente..."
+      />
+
+      <button
+        v-if="searchInput.length > 0"
+        class="search-button"
+        @click="clearInputSearch"
+      >
+        <i class="fa fa-close"></i>
+      </button>
+      <button v-else class="search-button">
+        <i class="fa fa-search"></i>
+      </button>
+    </div>
 
     <p class="paragrafo-lg instrucoes">
       Selecione abaixo os ingredientes que você quer usar nesta receita:
@@ -70,11 +91,12 @@ export default {
 
     <ul class="categorias">
       <li v-for="categoria in filteredCategorias" :key="categoria.nome">
-        <CardCategoria 
+        <CardCategoria
           :categoria="categoria"
           :selected-ingredientes="selectedIngredientes"
           @remover-ingrediente="removerIngrediente"
-          @adicionar-ingrediente="adicionarIngrediente" />
+          @adicionar-ingrediente="adicionarIngrediente"
+        />
       </li>
     </ul>
 
@@ -86,14 +108,37 @@ export default {
 
 <style scoped>
 
+.search-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
 .search-input {
-	border: 1px solid #F0633C;
-    padding: .5rem 1rem;
-    border-radius: 6px;
-    font-size: 14px;
-	font-weight: 600;
-    width: 20rem;
-    margin-bottom: 20px;
+  border: 1px solid #F0633C;
+  padding: 0.5rem 1rem;
+  border-radius: 6px 0 0 6px;
+  font-size: 14px;
+  font-weight: 600;
+  width: 18rem;
+  outline: none;
+}
+
+.search-button {
+  background-color: #F0633C;
+  border: none;
+  padding: 0.35rem 1rem;
+  border-radius: 0 6px 6px 0;
+  cursor: pointer;
+}
+
+.search-button i {
+  color: #fff;
+  font-size: 16px;
+}
+
+.search-button:hover {
+  background-color: #e0522a;
 }
 
 .selecionar-ingredientes {
