@@ -10,6 +10,10 @@ export default {
     categoria: {
       type: Object as PropType<ICategoria>,
       required: true
+    },
+    selectedIngredientes: {
+      type: Array as PropType<string[]>,
+      required: true
     }
   }
 }
@@ -26,9 +30,10 @@ export default {
     <ul class="categoria__ingredientes">
       <li v-for="ingrediente in categoria.ingredientes" :key="ingrediente">
         <IngredienteSelecionavel 
-          @remover-ingrediente="$emit('remover-ingrediente', $event)"
-          @adicionar-ingrediente="$emit('adicionar-ingrediente', $event)" 
-          :ingrediente="ingrediente" 
+          :ingrediente="ingrediente"
+          :is-selected="selectedIngredientes.includes(ingrediente)"
+          @remover-ingrediente="$emit('remover-ingrediente', ingrediente)"
+          @adicionar-ingrediente="$emit('adicionar-ingrediente', ingrediente)"
         />
       </li>
     </ul>

@@ -5,7 +5,14 @@ export default {
     components: { Tag },
     emits: ['adicionar-ingrediente', 'remover-ingrediente'],
     props: {
-        ingrediente: { type: String, required: true }
+        ingrediente: { 
+            type: String, 
+            required: true 
+        },
+        isSelected: {
+            type: Boolean,
+            default: false
+        }
     },
     data() {
         return {
@@ -13,14 +20,13 @@ export default {
         }
     },
     methods: {
-        aoClicar() {
-            this.selecionado = !this.selecionado
-            if(this.selecionado) {
-                this.$emit('adicionar-ingrediente', this.ingrediente)
+        toggleSelection() {
+            if (this.isSelected) {
+                this.$emit('remover-ingrediente', this.ingrediente);
             } else {
-                this.$emit('remover-ingrediente', this.ingrediente)
+                this.$emit('adicionar-ingrediente', this.ingrediente);
             }
-        }
+        },
     }
 }
 </script>
@@ -28,10 +34,10 @@ export default {
 <template>
     <button
         class="ingrediente"
-       @click="aoClicar"
-       :aria-pressed="selecionado"
+       @click="toggleSelection"
+       :aria-pressed="isSelected"
     >
-        <Tag :texto="ingrediente" :ativa="selecionado" />
+        <Tag :texto="ingrediente" :ativa="isSelected" />
     </button>
 </template>
 

@@ -12,7 +12,8 @@ export default {
   data() {
     return {
       categorias: [] as ICategoria[],
-      searchTerm: ''
+      searchTerm: '',
+      selectedIngredientes: [] as string[]
     }
   },
   computed: {
@@ -33,11 +34,26 @@ export default {
           }
           return null;
         })
-        .filter(categoria => categoria !== null);
+        .filter(categoria => categoria !== null) as ICategoria[];
     }
   },
   async created() {
     this.categorias = await obterCategorias();
+  },
+  methods: {
+    adicionarIngrediente(ingrediente: string) {
+      if (!this.selectedIngredientes.includes(ingrediente)) {
+        this.selectedIngredientes.push(ingrediente);
+      }
+      this.$emit('adicionar-ingrediente', ingrediente);
+    },
+    removerIngrediente(ingrediente: string) {
+      const index = this.selectedIngredientes.indexOf(ingrediente);
+      if (index > -1) {
+        this.selectedIngredientes.splice(index, 1);
+      }
+      this.$emit('remover-ingrediente', ingrediente);
+    }
   }
 }
 </script>
@@ -55,9 +71,10 @@ export default {
     <ul class="categorias">
       <li v-for="categoria in filteredCategorias" :key="categoria.nome">
         <CardCategoria 
-          :categoria="categoria" 
-          @remover-ingrediente="$emit('remover-ingrediente', $event)"
-          @adicionar-ingrediente="$emit('adicionar-ingrediente', $event)" />
+          :categoria="categoria"
+          :selected-ingredientes="selectedIngredientes"
+          @remover-ingrediente="removerIngrediente"
+          @adicionar-ingrediente="adicionarIngrediente" />
       </li>
     </ul>
 
