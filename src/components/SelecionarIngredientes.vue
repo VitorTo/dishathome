@@ -127,7 +127,7 @@ export default {
 .search-button {
   background-color: #F0633C;
   border: none;
-  padding: 0.35rem 1rem;
+  padding: 0.36em 1rem;
   border-radius: 0 6px 6px 0;
   cursor: pointer;
 }
