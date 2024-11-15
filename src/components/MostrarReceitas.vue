@@ -1,23 +1,18 @@
 <script lang="ts">
 
-import { PropType } from 'vue';
-import type IReceita from '@/interfaces/IReceita';
+import type IReceita from '../interfaces/IReceita';
 import CardReceita from './CardReceita.vue';
 
 export default {
     components: { CardReceita },
     props: {
         receitas: {
-            type: Array as PropType<IReceita[]>,
+            type: Array as () => IReceita[],
             required: true
         }
-    },
-    mounted() {
-        console.log(this.receitas)
     }
 }
 </script>
-
 
 <template>
     <section class="mostrar-receitas">

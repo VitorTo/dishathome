@@ -1,17 +1,18 @@
 <script lang="ts">
+
 import SelecionarIngredientes from './SelecionarIngredientes.vue';
 import SuaLista from './SuaLista.vue';
+import Rodape from './Rodape.vue';
 import BuscarReceitas from './BuscarReceitas.vue';
-import Footer from './Footer.vue';
 import MostrarReceitas from './MostrarReceitas.vue';
-import { obterReceitas } from '@/http';
-import type IReceita from '@/interfaces/IReceita';
+import { obterReceitas } from '../http';
+import type IReceita from '../interfaces/IReceita';
 import BackHome from './BackHome.vue';
 
 type Pagina = "SelecionarIngredientes" | "MostrarReceitas";
 
 export default {
-	components: { SelecionarIngredientes, SuaLista, BuscarReceitas, Footer, MostrarReceitas, BackHome },
+	components: { SelecionarIngredientes, SuaLista, BuscarReceitas, Rodape, MostrarReceitas, BackHome },
 	data() {
 		return {
 			ingredientes: [] as string[],
@@ -66,7 +67,7 @@ export default {
 		<back-home v-if="showMostrarReceitas" @back-home="navegar('SelecionarIngredientes')" />
 	</main>
 
-	<Footer />
+	<Rodape />
 </template>
 
 <style scoped>

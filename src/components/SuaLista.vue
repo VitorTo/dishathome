@@ -1,14 +1,14 @@
-<script>
+<script lang="ts">
 import Tag from './Tag.vue';
 
 export default {
     components: { Tag },
     props: {
         ingredientes: {
-            type: Array,
+            type: Array as () => string[],
             required: true
         }
-    }
+    },
 }
 </script>
 
@@ -19,7 +19,7 @@ export default {
         </span>
 
         <ul v-if="ingredientes.length" class="ingredientes-sua-lista">
-            <li v-for="ingrediente in ingredientes" :key="ingrediente">
+            <li v-for="(ingrediente, index) in ingredientes" :key="index">
                 <Tag :texto="ingrediente" ativa />
             </li>
         </ul>

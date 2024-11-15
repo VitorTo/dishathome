@@ -31,7 +31,6 @@ export default {
     <button
         :class="['buscar-receitas', active ? 'active' : 'desactive']"
         @click="aoClicar"
-        :aria-pressed="selecionado"
     >
         <i 
             v-if="isLoading" 
