@@ -4,47 +4,81 @@ import type ICategoria from '../interfaces/ICategoria';
 import CardCategoria from './CardCategoria.vue';
 
 export default {
-	name: 'SelecionarIngredientes',
-	emits: ['remover-ingrediente', 'adicionar-ingrediente'],
-	components: {
-		CardCategoria
-	},
-	data() {
-		return {
-			categorias: [] as ICategoria[]
-		}
-	},
-	async created() {
-		this.categorias = await obterCategorias();
-	}
+  name: 'SelecionarIngredientes',
+  emits: ['remover-ingrediente', 'adicionar-ingrediente'],
+  components: {
+    CardCategoria
+  },
+  data() {
+    return {
+      categorias: [] as ICategoria[],
+      searchTerm: ''
+    }
+  },
+  computed: {
+    filteredCategorias() {
+      if (!this.searchTerm) {
+        return this.categorias;
+      }
+      return this.categorias
+        .map(categoria => {
+          const ingredientesFiltrados = categoria.ingredientes.filter(ingrediente =>
+            ingrediente.toLowerCase().includes(this.searchTerm.toLowerCase())
+          );
+          if (ingredientesFiltrados.length > 0) {
+            return {
+              ...categoria,
+              ingredientes: ingredientesFiltrados
+            };
+          }
+          return null;
+        })
+        .filter(categoria => categoria !== null);
+    }
+  },
+  async created() {
+    this.categorias = await obterCategorias();
+  }
 }
-
 </script>
 
 <template>
-	<section class="selecionar-ingredientes">
-		<h1 class="cabecalho titulo-ingredientes">Ingredientes</h1>
+  <section class="selecionar-ingredientes">
+    <h1 class="cabecalho titulo-ingredientes">Ingredientes</h1>
 
-		<p class="paragrafo-lg instrucoes">
-			Selecione abaixo os ingredientes que você quer usar nesta receita:
-		</p>
+    <input class="search-input" type="text" v-model="searchTerm" placeholder="Pesquisar ingrediente..." />
 
-		<ul class="categorias">
-			<li v-for="categoria in categorias" :key="categoria.nome">
-				<CardCategoria 
-					:categoria="categoria" 
-					@remover-ingrediente="$emit('remover-ingrediente', $event)"
-					@adicionar-ingrediente="$emit('adicionar-ingrediente', $event)" />
-			</li>
-		</ul>
+    <p class="paragrafo-lg instrucoes">
+      Selecione abaixo os ingredientes que você quer usar nesta receita:
+    </p>
 
-		<p class="paragrafo dica">
-			*Atenção: consideramos que você tem em casa sal, pimenta e água.
-		</p>
-	</section>
+    <ul class="categorias">
+      <li v-for="categoria in filteredCategorias" :key="categoria.nome">
+        <CardCategoria 
+          :categoria="categoria" 
+          @remover-ingrediente="$emit('remover-ingrediente', $event)"
+          @adicionar-ingrediente="$emit('adicionar-ingrediente', $event)" />
+      </li>
+    </ul>
+
+    <p class="paragrafo dica">
+      *Atenção: consideramos que você tem em casa sal, pimenta e água.
+    </p>
+  </section>
 </template>
 
 <style scoped>
+
+.search-input {
+	border: 1px solid #F0633C;
+    padding: .5rem 1rem;
+    border-radius: 6px;
+    font-size: 14px;
+	font-weight: 600;
+    width: 20rem;
+    margin-bottom: 20px;
+}
+
 .selecionar-ingredientes {
 	display: flex;
 	flex-direction: column;
